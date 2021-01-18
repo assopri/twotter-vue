@@ -9,6 +9,9 @@
         <div class="twoot-item__content">
             @{{twoot.content}}
         </div>   
+        <div v-if="favourited"  class="twoot-item__favourited">
+            favourited
+        </div>   
             
         <br > 
       </div>
@@ -28,11 +31,19 @@
                   required: true
               }
           },
+          data(){
+              return {
+                  favourited : false
+              }
+          },
           methods:
           {
             favouriteTwoot(id)
-            {
-                this.$emit('favourite', id)
+            {          
+                let msg = (this.favourited?"de":"") + 'favourite';
+                
+                this.$emit('favourite', id, msg)
+                this.favourited = !this.favourited;
             }
           }
       }

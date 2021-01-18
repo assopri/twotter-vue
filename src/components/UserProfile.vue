@@ -61,9 +61,9 @@ export default {
     {
       this.followers++;
     },
-    toggleFavourite(id)
+    toggleFavourite(id, msg)
     {
-      console.log(`Favourited tweet ${id}`)
+      console.log(`${msg} tweet ${id}`)
     }
   },
   mounted()
