@@ -6,6 +6,18 @@
 <strong>Followers : </strong> {{followers}}
 <button @click="followUser">Follow</button>
     </div>
+    <form class="user-profile__create-form" @submit.prevent="createNewTwoot">
+<label for="NewTwoot">New Twoot</label>
+<textarea id="NewTwoot" columns="4" v-model="newTwootContent"></textarea>
+<div class="user-profile__create-twoot-type">
+<label for="NewTwoot">Type</label>
+<select id="NewTwoot" v-model="selectedTwootType">
+<option :value="option.value" v-for="(option, index) in twootTypes" :key="index" />
+  {{option.name}}
+</select>
+</div>
+<button>Twoot</button>
+      </form>
     <div class="user-profile__twoots-wrapper">
     
     <TwootItem 
@@ -27,6 +39,12 @@ export default {
   components: {TwootItem},
   data(){
     return {
+      newTwootContent: '',
+      selectedTwootType: 'instant',
+      twootTypes:[
+        {value: 'draft', name: 'Draft'},
+        {value: 'instant', name: 'Instant'}
+      ],
       followers: 0,
       user: {
         id: 1,
@@ -64,6 +82,14 @@ export default {
     toggleFavourite(id, msg)
     {
       console.log(`${msg} tweet ${id}`)
+    },
+    createNewTwoot()
+    {
+      if(this.newTwootContent && this.selectedTwootType!=='draft')
+      {
+        this.user.twoots.unshift({id: this.user.twoots.length+1,
+        content: this.newTwootContent});
+      }
     }
   },
   mounted()

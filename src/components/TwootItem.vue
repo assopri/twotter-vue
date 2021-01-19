@@ -44,6 +44,7 @@
                 
                 this.$emit('favourite', id, msg)
                 this.favourited = !this.favourited;
+                this.props.twoot.content +="1";
             }
           }
       }
