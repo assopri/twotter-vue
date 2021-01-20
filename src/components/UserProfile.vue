@@ -6,18 +6,31 @@
 <strong>Followers : </strong> {{followers}}
 <button @click="followUser">Follow</button>
     </div>
+    
     <form class="user-profile__create-form" @submit.prevent="createNewTwoot">
 <label for="NewTwoot">New Twoot</label>
 <textarea id="NewTwoot" columns="4" v-model="newTwootContent"></textarea>
 <div class="user-profile__create-twoot-type">
 <label for="NewTwoot">Type</label>
 <select id="NewTwoot" v-model="selectedTwootType">
-<option :value="option.value" v-for="(option, index) in twootTypes" :key="index" />
+<option :value="option.value" v-for="(option, index) in twootTypes" :key="index" >
   {{option.name}}
+  </option>
 </select>
 </div>
 <button>Twoot</button>
       </form>
+      
+
+      <!-- <form  @submit.prevent="logSmth">
+<select v-model="selectedTwootType">
+<option :value="option.value" v-for="(option,index) in twootTypes" :key="index">
+{{option.name}}
+  </option>
+ 
+  </select>
+   <button id="asdf">adf</button>
+        </form> -->
     <div class="user-profile__twoots-wrapper">
     
     <TwootItem 
@@ -39,7 +52,7 @@ export default {
   components: {TwootItem},
   data(){
     return {
-      newTwootContent: '',
+      newTwootContent: 'def',
       selectedTwootType: 'instant',
       twootTypes:[
         {value: 'draft', name: 'Draft'},
@@ -75,6 +88,10 @@ export default {
     }
   },
   methods: {
+    logSmth()
+    {
+      console.log(this.newTwootContent)
+    },
     followUser()
     {
       this.followers++;
@@ -90,6 +107,7 @@ export default {
         this.user.twoots.unshift({id: this.user.twoots.length+1,
         content: this.newTwootContent});
       }
+      this.newTwootContent = '';
     }
   },
   mounted()
