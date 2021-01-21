@@ -1,13 +1,13 @@
 <template>
   <div id="user-profile">
-{{user.username }} - {{fullName}}
-<div v-if="user.isAdmin">admin</div>
+{{state.user.username }} - {{fullName}}
+<div v-if="state.user.isAdmin">admin</div>
 <div v-else>not admin</div>
 <strong>Followers : </strong> {{followers}}
 <button @click="followUser">Follow</button>
     </div>
     
-    <form class="user-profile__create-form" @submit.prevent="createNewTwoot">
+    <!-- <form class="user-profile__create-form" @submit.prevent="createNewTwoot">
 <label for="NewTwoot">New Twoot</label>
 <textarea id="NewTwoot" columns="4" v-model="newTwootContent"></textarea>
 <div class="user-profile__create-twoot-type">
@@ -19,24 +19,16 @@
 </select>
 </div>
 <button>Twoot</button>
-      </form>
+      </form> -->
       
+<CreateTwootPanel @add-twoot="addTwoot" />
 
-      <!-- <form  @submit.prevent="logSmth">
-<select v-model="selectedTwootType">
-<option :value="option.value" v-for="(option,index) in twootTypes" :key="index">
-{{option.name}}
-  </option>
- 
-  </select>
-   <button id="asdf">adf</button>
-        </form> -->
     <div class="user-profile__twoots-wrapper">
     
     <TwootItem 
-      v-for="twoot of user.twoots" 
+      v-for="twoot of state.user.twoots" 
       :key="twoot.id" 
-      :username="user.username" 
+      :username="state.user.username" 
       :twoot="twoot" 
       @favourite="toggleFavourite"
     />
@@ -46,19 +38,15 @@
 
 <script>
 import TwootItem from "./TwootItem";
-
+import CreateTwootPanel from "./CreateTwootPanel";
+import {reactive, computed, watch, ref} from "vue";
 export default {
   name: 'UserProfile',
-  components: {TwootItem},
-  data(){
-    return {
-      newTwootContent: 'def',
-      selectedTwootType: 'instant',
-      twootTypes:[
-        {value: 'draft', name: 'Draft'},
-        {value: 'instant', name: 'Instant'}
-      ],
-      followers: 0,
+  components: {CreateTwootPanel, TwootItem},
+  setup()
+  {
+    const followers = ref(0)
+    const state = reactive({
       user: {
         id: 1,
         username: "_MitchelRomney",
@@ -72,49 +60,73 @@ export default {
         
         ]
       }
-    }
-  },
-  watch:{
-    followers(newFollowerCount, oldFollowerCount)
+    })
+    watch(followers, (newValue, oldValue) => 
     {
-      if(oldFollowerCount < newFollowerCount){
-        console.log(`${this.user.username} gained follower`)
-      }
-    }
-  },
-  computed:{
-    fullName(){
-      return `${this.user.firstName} ${this.user.LastName}`
-    }
-  },
-  methods: {
-    logSmth()
-    {
-      console.log(this.newTwootContent)
-    },
-    followUser()
-    {
-      this.followers++;
-    },
-    toggleFavourite(id, msg)
+      if(oldValue < newValue){
+            console.log(`${state.user.username} gained follower`)
+          }
+    })
+    const fullName = computed(()=>
+      {
+          `${state.user.firstName} ${state.user.LastName}`
+      })
+      function addTwoot(twoot)
+            {
+                state.user.twoots.unshift({id: state.user.twoots.length+1, content: twoot.text})
+            }
+            function    toggleFavourite(id, msg)
     {
       console.log(`${msg} tweet ${id}`)
-    },
-    createNewTwoot()
-    {
-      if(this.newTwootContent && this.selectedTwootType!=='draft')
-      {
-        this.user.twoots.unshift({id: this.user.twoots.length+1,
-        content: this.newTwootContent});
-      }
-      this.newTwootContent = '';
     }
-  },
-  mounted()
-  {
-    this.followUser();
+    function followUser()
+    {
+      followers.value ++;
+    }
+    return{state,fullName, addTwoot,toggleFavourite,followUser, followers};
   }
 }
+//  ,
+//   computed:{
+//     fullName(){
+//       return `${this.user.firstName} ${this.user.LastName}`
+//     }
+//   },
+//   methods: {
+    
+//             addTwoot(twoot)
+//             {
+//                 this.user.twoots.unshift({id: this.user.twoots.length+1, content: twoot.text})
+//             },
+//     logSmth()
+//     {
+//       console.log(this.newTwootContent)
+//     },
+//     followUser()
+//     {
+//       this.followers++;
+//     },
+
+
+
+
+
+
+    // createNewTwoot()
+    // {
+    //   if(this.newTwootContent && this.selectedTwootType!=='draft')
+    //   {
+    //     this.user.twoots.unshift({id: this.user.twoots.length+1,
+    //     content: this.newTwootContent});
+    //   }
+    //   this.newTwootContent = '';
+    // }
+//   },
+//   mounted()
+//   {
+//     this.followUser();
+//   }
+// }
 </script>
 
 <style>
