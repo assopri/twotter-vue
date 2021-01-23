@@ -1,23 +1,22 @@
 <template>
   <div id="app">
     <nav>
+      <router-link to="/">
         <div class="navi__logo">
         Twotter
         </div>
+        </router-link>
         <div class="navi__user">
         {{user.username}}
         </div><br /><br />
     </nav>
-<UserProfile />
+<router-view/>
     </div>
 </template>
-
 <script>
-import UserProfile from "./components/UserProfile";
 
 export default {
   name: 'App',
-  components: {UserProfile} ,
   data()
   {
     return{
@@ -37,6 +36,18 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>

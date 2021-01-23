@@ -1,6 +1,6 @@
 <template>
   <div id="user-profile">
-{{state.user.username }} - {{fullName}}
+{{state.user.username }} - {{fullName}} user Id = {{userId}}
 <div v-if="state.user.isAdmin">admin</div>
 <div v-else>not admin</div>
 <strong>Followers : </strong> {{followers}}
@@ -37,29 +37,22 @@
 </template>
 
 <script>
-import TwootItem from "./TwootItem";
-import CreateTwootPanel from "./CreateTwootPanel";
+import {useRoute} from 'vue-router';
+import TwootItem from "../components/TwootItem";
+import CreateTwootPanel from "../components/CreateTwootPanel";
 import {reactive, computed, watch, ref} from "vue";
+import {users} from "../assets/users"
 export default {
   name: 'UserProfile',
   components: {CreateTwootPanel, TwootItem},
   setup()
   {
+    const route = useRoute();
+    const userId = computed(()=>route.params.userId)
+    // if userid fetchUserFromApi userId
     const followers = ref(0)
     const state = reactive({
-      user: {
-        id: 1,
-        username: "_MitchelRomney",
-        firstName: 'Mitchel',
-        LastName: 'Romney',
-        email: 'mitc@m.com',
-        isAdmin: false,
-        twoots: [
-            {id: 1, content:'Twotter is cool'},
-            {id: 2, content: "subscribe"}
-        
-        ]
-      }
+      user: users[userId.value-1]||users[0]//[userId]||users[1]//users.filter(u => u.id === userId.value)
     })
     watch(followers, (newValue, oldValue) => 
     {
@@ -83,7 +76,7 @@ export default {
     {
       followers.value ++;
     }
-    return{state,fullName, addTwoot,toggleFavourite,followUser, followers};
+    return{state,fullName, addTwoot,toggleFavourite,followUser, followers,userId};
   }
 }
 //  ,
