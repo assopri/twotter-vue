@@ -6,7 +6,7 @@
         Twotter
         </div>
         </router-link>
-        <div class="navi__user">
+        <div class="navi__user" v-if="user">
         {{user.username}}
         </div><br /><br />
     </nav>
@@ -15,16 +15,16 @@
 </template>
 <script>
 
+import {useStore} from 'vuex';
+import {computed} from 'vue';
 export default {
   name: 'App',
-  data()
+  setup()
   {
-    return{
-      user:
-      {
-        username: '_MitchelRomney'
-      }
-    }
+    const store = useStore();
+    const user = computed(()=>store.state.User.user)
+
+    return{user};
   }
 }
 </script>
